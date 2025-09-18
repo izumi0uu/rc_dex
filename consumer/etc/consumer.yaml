@@ -1,0 +1,57 @@
+Name: consumer.rpc
+ListenOn: 0.0.0.0:8082
+# Etcd:
+#   Hosts:
+#   - 127.0.0.1:2379
+#   Key: consumer.rpc
+
+Consumer:
+  Concurrency: 1
+
+Mysql:
+  User: root
+  Password: richcode.cc
+  Host: localhost
+  Port: 3306
+  DBname: rc_dexs
+
+Sol:
+  ChainId: 100000
+  NodeUrl:
+    - "https://mainnet.helius-rpc.com/?api-key=ffb452cc-5d85-4d2c-b3b1-2fc808745116"
+  WSUrl: "wss://mainnet.helius-rpc.com/?api-key=ffb452cc-5d85-4d2c-b3b1-2fc808745116"
+
+Redis:
+  Host: localhost:6379
+  Pass: RichCode2DEX
+  Type: node
+  Key: dexs
+  PingTimeout: 10s
+  Tls: false
+
+market_service:
+  target: localhost:8080
+  nonblock: true
+  timeout: 10000  # 10 seconds timeout
+  transport: tcp
+  middlewares:
+    breaker: false
+
+trade_service:
+  target: localhost:8081
+  nonblock: true
+  timeout: 100000  # 3 seconds timeout
+  transport: tcp
+  middlewares:
+    breaker: false
+
+KqSolTrades:
+  Name: richcode-kafka
+  Brokers:
+    - server_kafka_addr:9093
+  Group: web3-dex-fix-2025
+  Topic: richcode
+  Offset: last
+  # Username: ""
+  # Password: ""
+

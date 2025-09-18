@@ -1,0 +1,87 @@
+version: "3.8"
+
+# docker compose for RichCode DEX Middleware
+#
+# This file sets up the necessary middleware services:
+# - MySQL: Database for persistent storage.
+# - Redis: In-memory cache for performance.
+# - Kafka & ZooKeeper: Messaging queue for the data pipeline.
+#
+# To start all services, run: docker compose up -d
+# To stop all services, run: docker compose down
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: richcode.cc # !!! 请务必修改为一个强密码 !!!
+      MYSQL_DATABASE: rc_dexs # 为项目创建一个默认数据库
+    ports:
+      - "3306:3306"
+    volumes:
+      - dex_mysql:/var/lib/mysql
+#      - ./data/mysql:/var/lib/mysql
+    networks:
+      - fun-dex-net
+
+  # Redis Cache
+  redis:
+    image: redis:7.0
+    container_name: redis-cache
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - dex_redis:/data
+#      - ./data/redis:/data
+    networks:
+      - fun-dex-net
+
+  # ZooKeeper for Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    container_name: zookeeper
+    restart: always
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - fun-dex-net
+
+  # Kafka Broker
+  kafka:
+    image: confluentinc/cp-kafka:7.3.0
+    container_name: kafka-broker
+    restart: always
+    depends_on:
+      - zookeeper
+    ports:
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_JMX_PORT: 9101
+      KAFKA_JMX_HOSTNAME: localhost
+    networks:
+      - fun-dex-net
+
+# 定义网络，让所有服务可以互相通信
+networks:
+  fun-dex-net:
+    driver: bridge
+
+# windows wsl 定义命名卷，避免权限问题
+volumes:
+  dex_mysql:
+  dex_redis:

@@ -1,0 +1,6 @@
+---
+description: 当用户想要访问、修改、美化前端页面时执行此命令
+globs:
+alwaysApply: false
+---
+当我输入 /ui 的时候，请你使用 @21st-dev/magic mcp来进行相关操作

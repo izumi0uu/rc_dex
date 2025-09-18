@@ -1,0 +1,38 @@
+Name: dataflow.rpc
+ListenOn: 0.0.0.0:8084
+# Etcd:
+#   Hosts:
+#   - 127.0.0.1:2379
+#   Key: dataflow.rpc
+
+
+KqSol:
+  Name: richcode-kafka
+  Brokers:
+    - server_kafka_addr:9093
+  Group: dex-dataflow-2025
+  Topic: richcode
+  Offset: last
+  Consumers: 1
+  Processors: 1
+  # Username: ""
+  # Password: ""
+
+Mysql:
+  Master:
+    Path: localhost
+    Port: 3306
+    Dbname: rc_dexs
+    Username: root
+    Password: richcode.cc
+    MaxIdleConns: 20
+    MaxOpenConns: 50
+
+
+redis:
+  Host: server_redis_addr:6379
+  Type: "node"
+  Pass: RichCode2DEX
+  Tls: false
+  Key: "10"
+  PingTimeout: 10s

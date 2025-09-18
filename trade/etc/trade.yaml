@@ -1,0 +1,43 @@
+Name: trade.rpc
+ListenOn: 0.0.0.0:8081
+Timeout: 30000  # 30 seconds timeout for RPC requests
+
+# Etcd:
+#   Hosts:
+#   - 127.0.0.1:2379
+#   Key: trade.rpc
+
+simulate_only: false
+
+Sol:
+  ChainId: 100000
+  #jito 不为空，就用jito地址来发送 (disabled for devnet)
+  Jito: ""
+  NodeUrl:
+    - "https://mainnet.helius-rpc.com/?api-key=2d7580ca-93d2-4404-9316-656c2726a26a"
+  Enable: true
+  UUID: "e322635ed37c12a203af5f1e845278f26c2d46ca"
+
+market_service:
+  target: localhost:8080
+  nonblock: true
+  timeout: 100000  # 3 seconds timeout
+  transport: tcp
+
+
+Mysql:
+  User: root
+  Password: richcode.cc
+  Host: localhost
+  Port: 3306
+  DBname: rc_dexs
+  ConnectTimeout: 30s
+  ReadTimeout: 30s
+  WriteTimeout: 30s
+
+Redis:
+  Host: localhost:6379
+  Pass: RichCode2DEX
+  Type: node
+  Key: dexs
+  PingTimeout: 10s

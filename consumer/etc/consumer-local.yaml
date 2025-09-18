@@ -1,0 +1,55 @@
+Name: consumer.rpc
+ListenOn: 0.0.0.0:8082
+# Etcd:
+#   Hosts:
+#   - 127.0.0.1:2379
+#   Key: consumer.rpc
+
+Consumer:
+  Concurrency: 1
+
+Mysql:
+  User: root
+  Password: richcode.cc # Corresponds to the password in docker-compose.yml
+  Host: 127.0.0.1 # Use loopback IP to connect from host to Docker container
+  Port: 3306
+  Dbname: rc_dexs # Database name in docker-compose
+
+Sol:
+  ChainId: 100000
+  NodeUrl:
+    - "https://devnet.helius-rpc.com/?api-key=ffb452cc-5d85-4d2c-b3b1-2fc808745116"
+  WSUrl: "wss://devnet.helius-rpc.com/?api-key=ffb452cc-5d85-4d2c-b3b1-2fc808745116"
+
+Redis:
+  Host: 127.0.0.1:6379 # Use loopback IP to connect from host to Docker container
+  Pass: "" # No password set in docker-compose
+  Type: node
+  Key: dexs
+  PingTimeout: 10s
+  Tls: false
+
+market_service:
+  target: localhost:8080
+  nonblock: true
+  timeout: 10000  # 10 seconds timeout
+  transport: tcp
+  middlewares:
+    breaker: false
+
+trade_service:
+  target: localhost:8081
+  nonblock: true
+  timeout: 100000  # 3 seconds timeout
+  transport: tcp
+  middlewares:
+    breaker: false
+
+KqSolTrades:
+  Name: richcode-kafka
+  Brokers:
+    - 127.0.0.1:29092 # Use loopback IP to connect from host to Docker container
+  Group: web3-dex-fix-2025
+  Topic: richcode
+  Offset: last
+
