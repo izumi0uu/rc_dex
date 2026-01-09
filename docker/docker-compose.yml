@@ -14,13 +14,15 @@ services:
   # MySQL Database
   mysql:
     image: mysql:8.0
-    container_name: mysql-db
+    container_name: rc.dex
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: richcode.cc # !!! 请务必修改为一个强密码 !!!
-      MYSQL_DATABASE: rc_dexs # 为项目创建一个默认数据库
+      MYSQL_ROOT_PASSWORD: richcode.cc
+      MYSQL_DATABASE: rc_dexs
+      MYSQL_ROOT_HOST: '%'  # 允许root远程
     ports:
       - "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password --bind-address=0.0.0.0  # MySQL8 caching_sha2需此，绑定所有IP
     volumes:
       - dex_mysql:/var/lib/mysql
 #      - ./data/mysql:/var/lib/mysql
