@@ -100,10 +100,14 @@ func (c *SaramaKafkaConsumer) Start() {
 	config.ChannelBufferSize = 256
 
 	// SASL configurations (EXACT same as producer)
-	config.Net.SASL.Enable = true
-	config.Net.SASL.Mechanism = sarama.SASLTypePlaintext
-	config.Net.SASL.User = c.config.Username
-	config.Net.SASL.Password = c.config.Password
+	if c.config.Username != "" && c.config.Password != "" {
+		config.Net.SASL.Enable = true
+		config.Net.SASL.Mechanism = sarama.SASLTypePlaintext
+		config.Net.SASL.User = c.config.Username
+		config.Net.SASL.Password = c.config.Password
+	} else {
+		config.Net.SASL.Enable = false
+	}
 
 	config.ClientID = "dataflow-consumer"
 
