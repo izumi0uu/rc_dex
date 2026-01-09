@@ -18,8 +18,8 @@ Mysql:
 Sol:
   ChainId: 100000
   NodeUrl:
-    - "https://devnet.helius-rpc.com/?api-key=ffb452cc-5d85-4d2c-b3b1-2fc808745116"
-  WSUrl: "wss://devnet.helius-rpc.com/?api-key=ffb452cc-5d85-4d2c-b3b1-2fc808745116"
+    - "https://devnet.helius-rpc.com/?api-key=32d3502f-0947-4dc3-8c18-752f58fcd7cb"
+  WSUrl: "wss://devnet.helius-rpc.com/?api-key=32d3502f-0947-4dc3-8c18-752f58fcd7cb"
 
 Redis:
   Host: 127.0.0.1:6379 # Use loopback IP to connect from host to Docker container
@@ -32,7 +32,7 @@ Redis:
 market_service:
   target: localhost:8080
   nonblock: true
-  timeout: 10000  # 10 seconds timeout
+  timeout: 10000 # 10 seconds timeout
   transport: tcp
   middlewares:
     breaker: false
@@ -40,7 +40,7 @@ market_service:
 trade_service:
   target: localhost:8081
   nonblock: true
-  timeout: 100000  # 3 seconds timeout
+  timeout: 100000 # 3 seconds timeout
   transport: tcp
   middlewares:
     breaker: false
@@ -52,4 +52,3 @@ KqSolTrades:
   Group: web3-dex-fix-2025
   Topic: richcode
   Offset: last
-
